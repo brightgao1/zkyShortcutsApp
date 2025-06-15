@@ -1,0 +1,128 @@
+/***    Created w/ BrightWin & BrightEditor (both written by Bright Gao)
+
+Creation time & date:     13:52:05 , 6/12/2,025
+
+File author:              Bright Gao
+
+File name when created:   main.zky
+
+Directory created in:     C:\Users\brigh\Documents\zkyProjects\shortcutsApp
+
+***/
+
+nonConstant instancePointer mainInstance;
+changeable windowPointer mainWindow…… openAllButton…… addWinAppButton…… openNotepadButton;
+
+dataStructure winApp【
+	windowPointer butt; iconPointer icon; unicodeString pathToApp;
+】;
+changeable dynamicArray</ winApp。。winApps />; 
+changeable positiveInteger32 currX stores 10…… currY stores 10…… addWinAppID stores 1;
+immutable unicodeString mainWindowClassStr stores unicodeLiteral</ The Main Window Class Name! />; 
+changeable wideString appDataPath…… ADwinAppsPath；
+changeable dynamicArray</ unicodeString。。winAppPaths />;
+changeable hashMap</ windowPointer。。winApp。。buttonToWinApp />;
+changeable rectangle mainWindowRectangle;
+
+function noReturn initApp   <//> 《
+	getAppDataPath</ appDataPath /> 》》appDataPath storesItselfPlus</ unicodeLiteral</ \\ShortcutsApp_zky /> />;
+	ADwinAppsPath stores appDataPath 》》ADwinAppsPath storesItselfPlus</ unicodeLiteral</ \\winApps.txt /> />;
+	· |[negation ([! binary !]pathExists</ appDataPath />) ]| newDirectory</ appDataPath />;
+	· |[ pathExists</ ADwinAppsPath /> ]| 【
+		fileToDynamicArray</ ADwinAppsPath。。winAppPaths />;	
+	】
+	··newFile</ ADwinAppsPath />;
+	zuoAnniu</ openAllButton。。unicodeLiteral</ OPEN ALL />。。currX。。currY。。90。。35。。mainWindow。。666 />;
+	currX storesItselfPlus</ 120 /> 》》getRectangle</ mainWindow。。mainWindowRectangle />;
+	一》|[i。。winAppPaths elementCount]| 【
+		winApp wa; wa get pathToApp stores winAppPaths atIndex</ i />;
+		zuo</ wa get butt。。unicodeLiteral</ Button />。。null。。[! positiveInteger32 !](WS_CHILD | WS_BORDER | BS_ICON)。。[! positiveInteger16 !]currX。。[! positiveInteger16 !]currY。。64。。64。。mainWindow />;
+		wa get icon stores ExtractIconW</ mainInstance。。(wa get pathToApp) pointer。。null />;
+		SendMessageW</ wa get butt。。BM_SETIMAGE。。[! positiveInteger32Pointer !]IMAGE_ICON。。[! integer64Pointer !](wa get icon) />;
+		winApps addToEnd</ wa /> 》》buttonToWinApp atKey</ wa get butt /> stores wa 》》  currX storesItselfPlus</ 74 />;
+		·|[ (currX plus 74) isGreaterThan (mainWindowRectangle get right) ]| currX stores 10 》》currY storesItselfPlus</ 74 />;
+	】
+	zuoAnniu</ addWinAppButton。。unicodeLiteral</ Add App />。。currX。。currY。。64。。64。。mainWindow。。2000 />;
+	getRectangle</ mainWindow。。mainWindowRectangle />;
+	zuoAnniu</ openNotepadButton。。unicodeLiteral</ See paths />。。(mainWindowRectangle get right) minus (110)。。(mainWindowRectangle get bottom) minus 50。。100。。40。。mainWindow。。null />;
+	SendMessageW</ mainWindow。。WM_SIZE。。[! positiveInteger32Pointer !]0。。[! integer64Pointer !]0 />;
+》
+function noReturn openAllApps   <//> 《
+	一》|[i。。winApps elementCount]| zkyRun</ ((winApps atIndex</ i />) get pathToApp) pointer。。null />;
+》
+function noReturn resizeMainWindow   <//> 《
+	currX stores 120 》》currY stores 10 》》getRectangle</ mainWindow。。mainWindowRectangle />;
+	一》|[i。。winApps elementCount]| 【
+		windowPointer b stores (winApps atIndex</ i />) get butt; 
+		MoveWindow</ b。。currX。。currY。。64。。64。。null /> 》》currX storesItselfPlus</ 74 />;
+		·|[(currX plus 74) isGreaterThan (mainWindowRectangle get right)]| currX stores 10 》》currY storesItselfPlus</ 74 />;
+		
+	】
+	MoveWindow</ openAllButton。。10。。10。。90。。35。。[! truthValue !]1 /> 》》MoveWindow</ openNotepadButton。。(mainWindowRectangle get right) minus 110。。(mainWindowRectangle get bottom) minus 50。。100。。40。。[! truthValue !]1 />;
+	MoveWindow</ addWinAppButton。。currX。。currY。。64。。64。。[! truthValue !]1 />;
+》
+function noReturn initAddAppDialog   <//> 《
+	OPENFILENAMEW ofn; constant wideCharacter* filter stores unicodeLiteral</ .exe file\0*.EXE\0All\0*.*\0\0 />;
+	initFileDialog</ ofn。。filter。。0 />;
+	dynamicArray</ unicodeString。。fileArr />; unicodeString newAppPath stores ofn.lpstrFile;
+	·|[ (newAppPath elementCount) isLessThan 4]| 一一; 
+	fileToDynamicArray</ ADwinAppsPath。。fileArr />》》fileArr addToEnd</ newAppPath />;
+	winApp wa; wa get pathToApp stores newAppPath;
+	zuo</ wa get butt。。unicodeLiteral</ Button />。。null。。[! positiveInteger32 !](WS_CHILD | WS_BORDER | BS_ICON)。。[! positiveInteger16 !]currX。。[! positiveInteger16 !]currY。。64。。64。。mainWindow />;
+	wa get icon stores ExtractIconW</ mainInstance。。(wa get pathToApp) pointer。。null />;
+	SendMessageW</ wa get butt。。BM_SETIMAGE。。[! positiveInteger32Pointer !]IMAGE_ICON。。[! integer64Pointer !](wa get icon) />;
+	winApps addToEnd</ wa />;
+	dynamicArrayToFile</ ADwinAppsPath。。fileArr /> 》》resizeMainWindow<//>;
+》
+windowHandler WndProc   </ changeable windowPointer window。。nonMutable positiveInteger32 message。。changeable positiveInteger32Pointer parameter1。。changeable integer64Pointer parameter2 /> 《
+    · |[ message isEqualTo?? WM_COMMAND ]| 【
+		· |[first16Bits</ parameter1 /> isEqualTo?? BN_CLICKED ]| 【
+			windowPointer b stores [! windowPointer !]parameter2; 
+			·|[b isEqualTo?? openAllButton]| openAllApps<//>;
+			···|[b isEqualTo?? addWinAppButton]| initAddAppDialog<//>;
+			···|[b isEqualTo?? openNotepadButton]| 【
+				unicodeString command stores ADwinAppsPath;
+				zkyRun</ unicodeLiteral</ explorer.exe />。。command pointer />;
+			】
+			·· 【
+				winApp appClicked stores (buttonToWinApp atKey</ b />);
+				zkyRun</ (appClicked get pathToApp) pointer。。null />;
+			】
+		】 
+	】
+	···|[ message isEqualTo?? WM_SIZE ]| resizeMainWindow<//>;
+    ··· |[ message isEqualTo?? WM_PAINT ]| 【
+        changeable PAINTSTRUCT ps;
+        changeable HDC hdc stores BeginPaint</ window, &ps />;
+        EndPaint</ window, &ps />;
+    】
+    ··· |[ message isEqualTo?? WM_DESTROY ]| PostQuitMessage</ [! integer16 !]0 />;
+    ·· 一一 DefWindowProcW</ window。。message。。parameter1。。parameter2 />;
+   	一一 [! integer16 !]0;
+》
+function returns variable MyRegisterClass   </ changeable instancePointer in /> 《
+    	changeable WNDCLASSEXW c; c.cbSize stores bytes</ WNDCLASSEXW />; 
+	c.hInstance stores in 》》c.style stores CS_HREDRAW | CS_VREDRAW 》》c.lpfnWndProc stores WndProc;
+    	c.cbClsExtra stores null 》》c.cbWndExtra stores null 》》c.hIcon stores null 》》c.hCursor stores LoadCursor</ null。。IDC_ARROW />;
+    	c.lpszMenuName stores null 》》c.hIconSm stores null 》》c.lpszClassName stores mainWindowClassStr pointer;
+    	c.hbrBackground stores [! brushPointer !]([! positiveInteger16 !]6); 一一 RegisterClassExW</ &c />;
+》
+function returns variable InitInstance   </ changeable instancePointer in。。immutable integer32 howToShow /> 《
+   	mainInstance stores in; changeable windowPointer tmp;
+   	zuo</ tmp。。mainWindowClassStr pointer。。null。。WS_OVERLAPPEDWINDOW。。[! positiveInteger16 !]50。。[! positiveInteger16 !]50。。[! positiveInteger16 !]800。。[! positiveInteger16 !]600。。null />;
+   	mainWindow stores [! windowPointer !]tmp 》》ShowWindow</ mainWindow。。howToShow/> 》》UpdateWindow</ mainWindow /> 》》SetWindowTextW</ mainWindow。。unicodeLiteral</ Shortcuts />/>;
+   	initApp<//>;
+	
+   	一一 [! integer32 !]1;
+》
+
+win32Entry   </ nonConstant instancePointer in。。changeable instancePointer prev。。nonMutable unicodeStringPointer cmdStr。。constant integer32 howToShow/> 《    	
+   	MyRegisterClass</ in />; changeable MSG msg;
+    	· |[ negation (InitInstance</ in。。howToShow />) ]| 一一 [! integer16 !]0;
+    	
+    	口 |[ GetMessage</ &msg。。null。。 0。。 0 /> ]| 【
+     		· |[ ([! integer32 !]TranslateAccelerator</ msg.hwnd。。null。。&msg />) isEqualTo?? [! integer16 !]0 ]| TranslateMessage</ &msg /> 》》DispatchMessage</ &msg />;
+    	】
+	一一 [! integer32 !]msg.wParam;
+》
+
