@@ -6,7 +6,7 @@ Me programming this in my IDE: https://www.youtube.com/watch?v=NAqOZknUkLI
 
 
   
-I'm still developing the zky programming language and zkyCompiler, so yea only I am able to compile this program as of me writing this now.
+I'm still developing the zky programming language and zkyCompiler, so yea only I am able to compile this program as of me writing this now :P
 
 But the compiled exe is in zkyRelease folder, and is 178 KB.
 
