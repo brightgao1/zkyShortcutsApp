@@ -10,3 +10,6 @@ I'm still developing the zky programming language and zkyCompiler, so yea only I
 
 But the compiled exe is in zkyRelease folder, and is 178 KB.
 
+
+https://github.com/user-attachments/assets/8fd1ae21-733e-4541-a223-a5113a8a1b6a
+
