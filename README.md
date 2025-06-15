@@ -1,2 +1,7 @@
-# zkyShortcutsApp
-A simple Windows shortcuts app written in the zky programming language. (178 KB .exe)
+Created with the zky programming language in BrightEditor, both written by me.
+Compiled with zkyCompiler, also written by me.
+
+
+
+
+
